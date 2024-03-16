@@ -25,6 +25,10 @@ const NewsDetailPage: React.FC = () => {
     navigation.navigate('CommentsPage', {newsId});
   };
 
+  const handleSeeAuthor = () => {
+    navigation.navigate('AuthorPage', {authorId});
+  };
+
   if (newsError || authorError) {
     return <Error />;
   }
@@ -46,6 +50,7 @@ const NewsDetailPage: React.FC = () => {
         </Text>
         <Text style={styles.body}>{newsData.body}</Text>
       </View>
+      <Button title="See Author" onPress={handleSeeAuthor} />
       <Button title="See Comments" onPress={handleSeeComments} />
     </SafeAreaView>
   );
