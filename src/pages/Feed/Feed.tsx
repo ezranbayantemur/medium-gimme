@@ -16,11 +16,14 @@ const FeedPage: React.FC = () => {
   );
 
   const renderPost: ListRenderItem<Post> = ({item}) => (
-    <PostCard post={item} onSelected={() => handlePostSelected(item.id)} />
+    <PostCard
+      post={item}
+      onSelected={() => handlePostSelected(item.id, item.userId)}
+    />
   );
 
-  const handlePostSelected = (id: number) => {
-    navigation.navigate('NewsDetailPage', {id});
+  const handlePostSelected = (newsId: number, authorId: number) => {
+    navigation.navigate('NewsDetailPage', {newsId, authorId});
   };
 
   if (error) {
@@ -31,11 +34,15 @@ const FeedPage: React.FC = () => {
     return <Loading />;
   }
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <SafeAreaView>
       <FlatList
         keyExtractor={item => item.id.toString()}
-        data={data}
+        data={data.slice(0, 20) || []}
         renderItem={renderPost}
       />
     </SafeAreaView>

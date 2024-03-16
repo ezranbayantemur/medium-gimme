@@ -9,20 +9,20 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 const NewsDetailPage: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
-  const {id} = route.params;
+  const {newsId, authorId} = route.params;
   const {
     data: newsData,
     loading: newsLoading,
     error: newsError,
-  } = useFetch<Post>(`${SERVER_URL}/posts/${id}`, {}, []);
+  } = useFetch<Post>(`${SERVER_URL}/posts/${newsId}`, {}, []);
   const {
     data: authorData,
     loading: authorLoading,
     error: authorError,
-  } = useFetch<User>(`${SERVER_URL}/users/${id}`, {}, []);
+  } = useFetch<User>(`${SERVER_URL}/users/${authorId}`, {}, []);
 
   const handleSeeComments = () => {
-    navigation.navigate('CommentsPage', {id});
+    navigation.navigate('CommentsPage', {newsId});
   };
 
   if (newsError || authorError) {

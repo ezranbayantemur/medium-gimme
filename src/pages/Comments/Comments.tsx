@@ -15,9 +15,9 @@ import CommentInput from '../../components/CommentInput';
 
 const CommentsPage: React.FC = () => {
   const route = useRoute<any>();
-  const {id} = route.params;
+  const {newsId} = route.params;
   const {get, loading, error} = useFetch<Comment[]>(
-    `${SERVER_URL}/posts/${id}/comments`,
+    `${SERVER_URL}/posts/${newsId}/comments`,
     {},
     [],
   );
