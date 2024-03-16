@@ -1,14 +1,21 @@
-import React from 'react';
-import {FlatList, SafeAreaView, type ListRenderItem} from 'react-native';
+import React, {useState} from 'react';
+import {
+  FlatList,
+  SafeAreaView,
+  type ListRenderItem,
+  Text,
+  StyleSheet,
+} from 'react-native';
 import useFetch from 'use-http';
 import {useNavigation} from '@react-navigation/native';
 
 import {Post} from '../../types';
 import {SERVER_URL} from '../../configs/config';
-import {PostCard, Loading, Error} from '../../components';
+import {PostCard, Loading, Error, SearchBar} from '../../components';
 
 const FeedPage: React.FC = () => {
   const navigation = useNavigation<any>();
+  const [searchText, setSearchText] = useState('');
   const {data, loading, error} = useFetch<Post[]>(
     `${SERVER_URL}/posts`,
     {},
@@ -26,6 +33,10 @@ const FeedPage: React.FC = () => {
     navigation.navigate('NewsDetailPage', {newsId, authorId});
   };
 
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+  };
+
   if (error) {
     return <Error />;
   }
@@ -38,15 +49,33 @@ const FeedPage: React.FC = () => {
     return null;
   }
 
+  const filteredData = data.filter(item =>
+    item.title.toLowerCase().includes(searchText.toLowerCase()),
+  );
+
   return (
     <SafeAreaView>
       <FlatList
         keyExtractor={item => item.id.toString()}
-        data={data.slice(0, 20) || []}
+        data={filteredData.slice(0, 20) || []}
         renderItem={renderPost}
+        ListHeaderComponent={<SearchBar onSearch={handleSearch} />}
+        ListEmptyComponent={
+          <Text style={styles.empty_list_title}>
+            Can't find new about "{searchText}"
+          </Text>
+        }
       />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  empty_list_title: {
+    textAlign: 'center',
+    padding: 20,
+    color: 'gray',
+  },
+});
 
 export default FeedPage;
